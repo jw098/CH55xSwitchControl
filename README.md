@@ -14,8 +14,7 @@ This is an Arduino IDE library for automating the Nintendo Switch using the inex
 - Arduino IDE
 
 ## How to use
-### Environment settings
-**Installing WCHISPTool**
+### Installing WCHISPTool
 
 Download the installer from the URL below and install WCHISPTool.
 After installation, launch WCHISPTool and the CH552 driver will be installed.
@@ -24,10 +23,10 @@ https://www.wch-ic.com/downloads/WCHISPTool_Setup_exe.html
 
 link to driver only: https://www.wch-ic.com/downloads/CH372DRV_EXE.html
 
-**Installing the library**
+### Installing the library
 While in Arduino IDE, open the Library Manager. Search for this library name "CH55xSwitchControl" and install it.
 
-**Installing ch55xduino**
+###  Installing ch55xduino
 This is required to use the CH552 microcontroller in Arduino IDE.
 1. Open File → Preferences and add the following URL to "Additional Boards Manager URLs".
 ~~~
@@ -40,23 +39,23 @@ https://raw.githubusercontent.com/DeqingSun/ch55xduino/ch55xduino/package_ch55xd
 
 4. Select "USER CODE w/ 148B USB ram" from Tools → USB Settings.
 
-**Compiling with Arduino IDE**
+### Compiling with Arduino IDE
 - Ensure ch55xduino is installed and Arduino IDE is configured as above.
 - Click Sketch -> Export Compiled Binary. A build folder will now be created next to the .ino file. Inside the build folder is the .hex file.
 
-**Flashing to the CH552**
+### Flashing to the CH552
 
-The board must first be in bootloader mode: 
+**The board must first be in bootloader mode:**
 - Unplug the device from your computer
 - Hold the BOOT button while connecting the board to your PC via the USB port. You can then release the BOOT button.
 - see for more info:
   - https://github.com/wagiminator/CH552-MacroPad-plus/blob/main/README.md
   - https://github.com/DeqingSun/ch55xduino
 
-Flashing using Arduino IDE
+**Flashing using Arduino IDE**
 - While the board is connected and in bootloader mode (see above), press the upload button in Arduino IDE
 
-Flashing using WCHISPStudio
+**Flashing using WCHISPStudio**
 - ensure WCHISPTool has been installed (see above)
 - Click E8051 USB MCUs (CH54x/CH55x) in the left sidebar
 - Under Chip Option:
@@ -67,7 +66,7 @@ Flashing using WCHISPStudio
     - if you don't see your device listed, make sure you're in bootloader mode (i.e. unplug the CH552 board, and replug it while holding the BOOT button)
 - Click Download. When the progress bar is complete, the firmware should be flashed to the device.
 
-**Input**
+### Input
 
 Please write the following at the beginning of the file you want to use the library in.
 
