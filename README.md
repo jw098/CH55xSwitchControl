@@ -1,205 +1,228 @@
 # CH55xSwitchControl
 
-安価で入手できる中国製マイコンのCH552を使用してNintendo Switchを自動化する為のArduino IDE用ライブラリです。
+This is an Arduino IDE library for automating the Nintendo Switch using the inexpensive Chinese-made CH552 microcontroller.
 
 <img src="https://user-images.githubusercontent.com/21293572/202479479-fff6e791-59a1-463b-bc7a-f67b4cd12cca.jpg" width="50%">
 
-## 必要なもの
-**ハードウェア**
-- CH552マイコンボード
-    - USBシリアル変換機能を搭載したマイコンボードを[Booth](https://bzl.booth.pm/items/4326008)にて販売しています。
-- マイコンボードとNintendo Swicthを接続するUSBケーブル
+## What you need
+**Hardware**
+- CH552 microcontroller board
+- A microcontroller board with USB-to-serial conversion function is sold at [Booth](https://bzl.booth.pm/items/4326008).
+- A USB cable to connect the microcontroller board to the Nintendo Switch
 
-**ソフトウェア**
+**Software**
 - Arduino IDE
 
-## 使い方
-### 環境設定
-**WCHISPToolのインストール**  
-下記URLよりインストーラをダウンロードし、WCHISPToolをインストールします。  
-インストール後、WCHISPToolを起動するとCH552のドライバがインストールされます。
-https://cdn.discordapp.com/attachments/671698808140464158/1044979116572680262/WCHISPTool_Setup.exe
+## How to use
+### Environment settings
+**Installing WCHISPTool**
 
-**ライブラリのインストール**  
-Arduino IDEのライブラリマネージャーの検索窓で本ライブラリ名「CH55xSwitchControl」を検索し、インストールします。
+Download the installer from the URL below and install WCHISPTool.
+After installation, launch WCHISPTool and the CH552 driver will be installed.
+https://www.wch-ic.com/downloads/WCHISPTool_Setup_exe.html
 
 
-**ch55xduinoのインストール**  
-Arduino IDEでCH552マイコンを使用する為に必要となります。
-1. ファイル→環境設定を開き、「追加のボードマネージャのURL」に以下のURLを追加してください。
+link to driver only: https://www.wch-ic.com/downloads/CH372DRV_EXE.html
+
+**Installing the library**
+While in Arduino IDE, open the Library Manager. Search for this library name "CH55xSwitchControl" and install it.
+
+**Installing ch55xduino**
+This is required to use the CH552 microcontroller in Arduino IDE.
+1. Open File → Preferences and add the following URL to "Additional Boards Manager URLs".
 ~~~
 https://raw.githubusercontent.com/DeqingSun/ch55xduino/ch55xduino/package_ch55xduino_mcs51_index.json
 ~~~
 
-2. ツール→ボード→ボードマネージャを開き、検索窓で「ch55xduino」を検索し、インストールします。
+2. Open Tools → Board → Board Manager, search for "ch55xduino" in the search box, and install it.
 
-3. ツール→ボードから、CH552を選択します。
+3. Select CH552 from Tools → Board.
 
-4. ツール→USB Settingsから、「USER CODE w/ 148B USB ram」を選択します。
+4. Select "USER CODE w/ 148B USB ram" from Tools → USB Settings.
 
+**Compiling with Arduino IDE**
+- Ensure ch55xduino is installed and Arduino IDE is configured as above.
+- Click Sketch -> Export Compiled Binary. A build folder will now be created next to the .ino file. Inside the build folder is the .hex file.
 
-**入力**  
-ライブラリを使いたいファイルの先頭に以下のように記載してください。
+**Flashing to the CH552**
+
+The board must first be in bootloader mode: 
+- Unplug the device from your computer
+- Hold the BOOT button while connecting the board to your PC via the USB port. You can then release the BOOT button.
+- see for more info:
+  - https://github.com/wagiminator/CH552-MacroPad-plus/blob/main/README.md
+  - https://github.com/DeqingSun/ch55xduino
+
+Flashing using Arduino IDE
+- While the board is connected and in bootloader mode (see above), press the upload button in Arduino IDE
+
+Flashing using WCHISPStudio
+- ensure WCHISPTool has been installed (see above)
+- Click E8051 USB MCUs (CH54x/CH55x) in the left sidebar
+- Under Chip Option:
+  - Chip Series: CH55x
+  - Chip Model CH552
+  - Dnld Port: USB
+  - Dev List: CH55x---#1 device (or something similar)
+    - if you don't see your device listed, make sure you're in bootloader mode (i.e. unplug the CH552 board, and replug it while holding the BOOT button)
+- Click Download. When the progress bar is complete, the firmware should be flashed to the device.
+
+**Input**
+
+Please write the following at the beginning of the file you want to use the library in.
 
 ~~~
 #include <CH55xSwitchControl.h>
 ~~~
+## Command List
+### Button
+- Command to press a button
+- `pushButton(uint16_t button, uint32_t delay_time_msec)`
+- button: Button to press
+- delay_time_msec: Wait time after pressing the button (1 second = 1000)
+- `pushButtonLoop(uint16_t button, uint32_t delay_time_msec, uint16_t loop_num)`
+- button: Button to press
+- delay_time_msec: Wait time after pressing the button (1 second = 1000)
+- loop_num: Number of times to press the button
+- Example of use
+`
+pushButton(BUTTON_A, 500); // Wait 0.5 seconds after pressing the A button
+pushButtonLoop(BUTTON_B, 3000, 10); // Press the B button every 3 seconds, repeating 10 times
+```
 
-## コマンド一覧
+- Command to hold down a button
 
-### ボタン
+- `pushButtonContinuous(uint16_t button, uint32_t pushing_time_msec)`
 
-- ボタンを押すコマンド
+- button: Button to hold down
 
-  - `pushButton(uint16_t button, uint32_t delay_time_msec)`
+- pushing_time_msec: Length of time to hold down the button (1 second = 1000)
 
-    - button: 押すボタン
-    - delay_time_msec: ボタンを押した後の待ち時間（1 秒 = 1000）
-    
-  - `pushButtonLoop(uint16_t button, uint32_t delay_time_msec, uint16_t loop_num)`
+- Usage example
 
-    - button: 押すボタン
-    - delay_time_msec: ボタンを押した後の待ち時間（1 秒 = 1000）
-    - loop_num: ボタンを押す回数
+```
+pushButtonContinuous(BUTTON_L, 2000); // Press and hold the L button for 2 seconds, then release it
+pushButtonContinuous(BUTTON_CAPTURE, 1500); // Press and hold the capture button for 1.5 seconds, then release it
+```
 
-  - 使用例
+- Command to directly control the input state of a button (for advanced users)
 
-    ```
-    pushButton(BUTTON_A, 500);      // Aボタンを入力後、0.5秒待機する
-    pushButtonLoop(BUTTON_B, 3000, 10); // 3秒おきにBボタンを入力する、それを10回繰り返す
-    ```
+- `pressButton(uint16_t button)`
 
-- ボタンを長押しするコマンド
+- button: Button to press
 
-  - `pushButtonContinuous(uint16_t button, uint32_t pushing_time_msec)`
+- `releaseButton(uint16_t button)`
 
-    - button: 押し続けるボタン
-    - pushing_time_msec: ボタンを押す時間の長さ（1 秒 = 1000）
+- button: button to release
 
-  - 使用例
+- `BUTTON` definition list
 
-    ```
-    pushButtonContinuous(BUTTON_L, 2000);       // Lボタンを2秒間押し続けてから離す
-    pushButtonContinuous(BUTTON_CAPTURE, 1500); // キャプチャーボタンを1.5秒間押し続けてから離す
-    ```
+```
+BUTTON_NONE
+BUTTON_Y
+BUTTON_B
+BUTTON_A
+BUTTON_X
+BUTTON_L
+BUTTON_R
+BUTTON_ZL
+BUTTON_ZR
+BUTTON_MINUS
+BUTTON_PLUS
+BUTTON_LCLICK
+BUTTON_RCLICK
+BUTTON_HOME
+BUTTON_CAPTURE
+```
 
-- ボタンの入力状態を直接制御するコマンド（上級者向け）
+### D-pad (directional buttons)
 
-  - `pressButton(uint16_t button)`
+- Command to press D-pad (directional buttons)
 
-    - button: 押すボタン
+- `pushHatButton(uint8_t hat, uint32_t delay_time_msec);`
 
-  - `releaseButton(uint16_t button)`
-  
-    - button: 離すボタン
+- hat: D-pad button to press
 
-- `BUTTON` 定義一覧
+- delay_time_msec: Wait time after pressing button (1 second = 1000)
 
-  ```
-  BUTTON_NONE
-  BUTTON_Y
-  BUTTON_B
-  BUTTON_A
-  BUTTON_X
-  BUTTON_L
-  BUTTON_R
-  BUTTON_ZL
-  BUTTON_ZR
-  BUTTON_MINUS
-  BUTTON_PLUS
-  BUTTON_LCLICK
-  BUTTON_RCLICK
-  BUTTON_HOME
-  BUTTON_CAPTURE
-  ```
+- `pushHatButtonLoop(uint8_t hat, uint32_t delay_time_msec, uint16_t loop_num);`
 
-### 十字キー（方向ボタン）
+- hat: D-pad button to press
+- delay_time_msec: Wait time after pressing the button (1 second = 1000)
+- loop_num: Number of times to press the button
 
-- 十字キー（方向ボタン）を押すコマンド
+- Usage example
 
-  - `pushHatButton(uint8_t hat, uint32_t delay_time_msec);`
+```
+pushHatButton(HAT_LEFT, 1000); // Wait 1 second after pressing the left key
+pushHatButtonLoop(HAT_DOWN, 25, 5); // Press the down key every 0.25 seconds, repeating this 5 times
+```
 
-    - hat: 押す十字キーのボタン
-    - delay_time_msec: ボタンを押した後の待ち時間（1 秒 = 1000）
+- Command to press and hold the D-pad (directional button)
 
-  - `pushHatButtonLoop(uint8_t hat, uint32_t delay_time_msec, uint16_t loop_num);`
+- `pushHatButtonContinuous(uint8_t hat, uint32_t pushing_time_msec);`
 
-    - hat: 押す十字キーのボタン
-    - delay_time_msec: ボタンを押した後の待ち時間（1 秒 = 1000）
-    - loop_num: ボタンを押す回数
-    
-  - 使用例
+- hat: D-pad button to hold down
+- pushing_time_msec: Length of time to press the button (1 second = 1000)
 
-    ```
-    pushHatButton(HAT_LEFT, 1000);  // 左キーを入力後、1秒待機する
-    pushHatButtonLoop(HAT_DOWN, 25, 5); // 0.25秒おきに下キーを入力する、それを5回繰り返す
-    ```
+- Usage examples
 
-- 十字キー（方向ボタン）を長押しするコマンド
+```
+pushHatButtonContinuous(HAT_RIGHT, 5000); // Press and hold the right key for 5 seconds, then release
+pushHatButtonContinuous(HAT_UP_LEFT, 2500); // Press and hold the D-pad to the upper left for 2.5 seconds, then release
+```
 
-  - `pushHatButtonContinuous(uint8_t hat, uint32_t pushing_time_msec);`
+- Commands to directly control the input state of the D-pad (directional buttons) (for advanced users)
 
-    - hat: 押し続ける十字キーのボタン
-    - pushing_time_msec: ボタンを押す時間の長さ（1 秒 = 1000）
+- `pressHatButton(uint8_t hat)`
 
-  - 使用例
+- hat: D-pad button to press
 
-    ```
-    pushHatButtonContinuous(HAT_RIGHT, 5000);   // 右キーを5秒間押し続けてから離す
-    pushHatButtonContinuous(HAT_UP_LEFT, 2500); // 十字キーを左上方向に2.5秒間押し続けてから離す
-    ```
+- `releaseHatButton(uint8_t hat)`
 
-- 十字キー（方向ボタン）の入力状態を直接制御するコマンド（上級者向け）
+- hat: D-pad button to release
 
-  - `pressHatButton(uint8_t hat)`
+- `HAT` definition list
 
-    - hat: 押す十字キーのボタン
+```
+HAT_UP
+HAT_UP_RIGHT
+HAT_RIGHT
+HAT_DOWN_RIGHT
+HAT_DOWN
+HAT_DOWN_LEFT
+HAT_LEFT
+HAT_UP_LEFT
+HAT_CENTER
+```
 
-  - `releaseHatButton(uint8_t hat)`
-  
-    - hat: 離す十字キーのボタン
+### Stick
 
-- `HAT` 定義一覧
+The stick coordinates are specified as values ​​from -100 to 100, with 0 as the base point.
 
-  ```
-  HAT_UP
-  HAT_UP_RIGHT
-  HAT_RIGHT
-  HAT_DOWN_RIGHT
-  HAT_DOWN
-  HAT_DOWN_LEFT
-  HAT_LEFT
-  HAT_UP_LEFT
-  HAT_CENTER
-  ```
-  
-### スティック
+- Commands for controlling the stick
 
-スティックの座標は、0 を基点として -100〜100 の値を指定します。
+- `tiltJoystick(uint8_t lx_per, uint8_t ly_per, uint8_t rx_per, uint8_t ry_per, uint32_t tilt_time_msec);`
 
-- スティックを操作するコマンド
+- lx_per: L stick tilt amount in X direction
+- ly_per: L stick tilt amount in Y direction
+- rx_per: R stick tilt amount in X direction
+- ry_per: R stick tilt amount in Y direction
+- tilt_time_msec: Time to keep the stick tilted
 
-  - `tiltJoystick(uint8_t lx_per, uint8_t ly_per, uint8_t rx_per, uint8_t ry_per, uint32_t tilt_time_msec);`
+- Usage example
 
-    - lx_per: LスティックのX方向倒し量
-    - ly_per: LスティックのY方向倒し量
-    - rx_per: RスティックのX方向倒し量
-    - ry_per: RスティックのY方向倒し量
-    - tilt_time_msec: スティックを倒し続ける時間
+```
+tiltJoystick(-100, 0, 0, 0, 5000); // Tilt the L stick to the left for 5 seconds
+tiltJoystick(0, 100, 0, 0, 15000); // Tilt the L stick down for 15 seconds
+tiltJoystick(0, 0, 100, 100, 10000); // Tilt the R stick down and to the right for 10 seconds
+```
 
-  - 使用例
+- Commands to directly control the input state of the stick (for advanced users)
 
-    ```
-    tiltJoystick(-100, 0, 0, 0, 5000);           // Lスティックを左に5秒間倒す
-    tiltJoystick(0, 100, 0, 0, 15000);           // Lスティックを下に15秒間倒す
-    tiltJoystick(0, 0, 100, 100, 10000);         // Rスティックを右下に10秒間倒す
-    ```
+- `setStickTiltRatio(uint8_t lx_per, uint8_t ly_per, uint8_t rx_per, uint8_t ry_per)`
 
-- スティックの入力状態を直接制御するコマンド（上級者向け）
-
-  - `setStickTiltRatio(uint8_t lx_per, uint8_t ly_per, uint8_t rx_per, uint8_t ry_per)`
-
-    - lx_per: LスティックのX方向倒し量
-    - ly_per: LスティックのY方向倒し量
-    - rx_per: RスティックのX方向倒し量
-    - ry_per: RスティックのY方向倒し量
+- lx_per: L stick tilt amount in the X direction
+- ly_per: L stick tilt amount in the Y direction
+- rx_per: R stick tilt amount in the X direction
+- ry_per: R stick tilt amount in the Y direction
