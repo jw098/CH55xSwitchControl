@@ -46,8 +46,8 @@ https://raw.githubusercontent.com/DeqingSun/ch55xduino/ch55xduino/package_ch55xd
 ### Flashing to the CH552
 
 **The board must first be in bootloader mode:**
-- Unplug the device from your computer
-- Hold the BOOT button while connecting the board to your PC via the USB port. You can then release the BOOT button.
+- Unplug the CH552 device from your computer
+- Hold the BOOT button while connecting the board to your PC, using the USB-A connector on the Ch552. You can then release the BOOT button.
 - see for more info:
   - https://github.com/wagiminator/CH552-MacroPad-plus/blob/main/README.md
   - https://github.com/DeqingSun/ch55xduino
@@ -58,13 +58,15 @@ https://raw.githubusercontent.com/DeqingSun/ch55xduino/ch55xduino/package_ch55xd
 **Flashing using WCHISPStudio**
 - ensure WCHISPTool has been installed (see above)
 - Click E8051 USB MCUs (CH54x/CH55x) in the left sidebar
-- Under Chip Option:
+- Under `Chip Option`:
   - Chip Series: CH55x
   - Chip Model CH552
   - Dnld Port: USB
   - Dev List: CH55x---#1 device (or something similar)
     - if you don't see your device listed, make sure you're in bootloader mode (i.e. unplug the CH552 board, and replug it while holding the BOOT button)
-- Click Download. When the progress bar is complete, the firmware should be flashed to the device.
+- Under `Download File`
+  - Click the `...` next to `Object File1`: select the .hex file that you generated (see section on compiling above). Ensure adjacent box is checked.
+- Click `Download`. When the progress bar is complete, the firmware should be flashed to the device.
 
 ### Input
 
