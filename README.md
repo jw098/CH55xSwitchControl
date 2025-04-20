@@ -42,6 +42,7 @@ https://raw.githubusercontent.com/DeqingSun/ch55xduino/ch55xduino/package_ch55xd
 ### Compiling with Arduino IDE
 - Ensure ch55xduino is installed and Arduino IDE is configured as above.
 - Click Sketch -> Export Compiled Binary. A build folder will now be created next to the .ino file. Inside the build folder is the .hex file.
+- Alternatively, if you plan to upload with Arduino IDE: Click `Verify` to compile. Click `Upload` to compile and flash to your device.
 
 ### Flashing to the CH552
 
