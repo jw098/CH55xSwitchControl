@@ -1,5 +1,5 @@
 
-#include <CH55xSwitchControl.h>
+#include "src/CH55xSwitchControl.h"
 
 
 void setup() {
@@ -10,5 +10,5 @@ void setup() {
 }
 
 void loop() {
-  pushButton(BUTTON_A, 100);
+  pushButton(BUTTON_B, 100);
 }
